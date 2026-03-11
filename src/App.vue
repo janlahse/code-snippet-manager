@@ -29,11 +29,22 @@ const dummySnippet = ref({
   </main>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss">
 @use 'base';
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+body {
+  background-color: base.$white;
+}
+
 main {
-  margin: 45px 15vw 0;
+  padding: 45px 15vw 0;
   font-family: base.$default-font;
   color: base.$primary-color;
 

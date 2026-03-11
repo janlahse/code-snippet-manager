@@ -1,11 +1,44 @@
-<script setup></script>
+<script setup>
+import { ref } from 'vue'
+import SnippetCard from './components/SnippetCard.vue'
+
+const dummySnippet = ref({
+  id: 1,
+  title: 'HTML Boilerplate',
+  tag: 'HTML',
+  content: `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Hello, world!</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="" />
+  <link rel="icon" href="favicon.png">
+</head>
+<body>
+  <h1>Hello, world!</h1>
+</body>
+</html>`,
+})
+</script>
 
 <template>
-  <h1>You did it!</h1>
-  <p>
-    Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
-    documentation
-  </p>
+  <main>
+    <h1>Code Snippet Manager</h1>
+    <SnippetCard :snippet="dummySnippet" />
+  </main>
 </template>
 
-<style scoped></style>
+<style scoped lang="scss">
+@use 'base';
+
+main {
+  margin: 45px 15vw 0;
+  font-family: base.$default-font;
+  color: base.$primary-color;
+
+  > * {
+    margin-bottom: 30px;
+  }
+}
+</style>

@@ -1,9 +1,13 @@
 <script setup>
+import { ref } from 'vue'
+
 const props = defineProps(['snippet'])
+
+const active = ref(false)
 </script>
 
 <template>
-  <section :class="props.snippet.isActive && 'snippet-active'">
+  <section :class="active && 'snippet-active'" @click="active = !active">
     <h2>{{ props.snippet.title }}</h2>
     <span>{{ props.snippet.tag }}</span>
     <div>
@@ -16,9 +20,8 @@ const props = defineProps(['snippet'])
 @use '/src/base';
 
 section {
-  max-width: 45%;
   height: 190px;
-  display: inline-flex;
+  display: flex;
   flex-direction: column;
   gap: 10px;
   align-items: start;
@@ -28,15 +31,15 @@ section {
 }
 
 .snippet-active {
+  grid-column: 1/-1;
   height: unset;
-  max-width: unset;
 }
 
 span {
   background-color: base.$secondary-color;
   padding: 5px 8px;
   border-radius: 5px;
-  color: base.$white;
+  color: white;
   font-weight: bold;
 }
 

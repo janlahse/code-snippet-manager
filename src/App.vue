@@ -7,7 +7,7 @@ const snippetsList = ref([
     id: 1,
     title: 'HTML Boilerplate',
     tag: 'HTML',
-    isActive: true,
+    isActive: false,
     content: `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -38,7 +38,7 @@ const snippetsList = ref([
     id: 3,
     title: 'CSS Reset',
     tag: 'CSS',
-    isActive: true,
+    isActive: false,
     content: `*,
 *::before,
 *::after {
@@ -73,6 +73,7 @@ const snippetsList = ref([
     <h1>Code Snippet Manager</h1>
     <section class="displayedSnippets">
       <SnippetCard v-for="snippet in snippetsList" :key="snippet.id" :snippet="snippet" />
+      <SnippetCard v-for="snippet in snippetsList" :key="snippet.id" :snippet="snippet" />
     </section>
   </main>
 </template>
@@ -92,7 +93,7 @@ body {
 }
 
 main {
-  padding: 45px 15vw 0;
+  padding: 30px 10% 0;
   font-family: base.$default-font;
   color: base.$primary-color;
 
@@ -102,8 +103,14 @@ main {
 }
 
 .displayedSnippets {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 30px;
+  display: grid;
+  grid-template-columns: 100%;
+  gap: 15px;
+  @media (min-width: 600px) {
+    grid-template-columns: calc(50% - 7.5px) calc(50% - 7.5px);
+  }
+  @media (min-width: 900px) {
+    grid-template-columns: calc((100% / 3) - 10px) calc((100% / 3) - 10px) calc((100% / 3) - 10px);
+  }
 }
 </style>

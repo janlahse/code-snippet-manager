@@ -8,7 +8,7 @@ const active = ref(false)
 
 <template>
   <section :class="active && 'snippet-active'">
-    <h2>{{ props.snippet.title }}</h2>
+    <h2>FormCard{{ props.snippet.title }}</h2>
     <button @click="active = !active">{{ active ? 'Collapse' : 'Expand' }}</button>
     <span>{{ props.snippet.tag }}</span>
     <div>

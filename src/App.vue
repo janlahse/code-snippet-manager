@@ -1,10 +1,10 @@
 <script setup>
 import { ref } from 'vue'
 import SnippetCard from './components/SnippetCard.vue'
+import FormCard from './components/FormCard.vue'
 
 const snippetsList = ref([
   {
-    id: 1,
     title: 'HTML Boilerplate',
     tag: 'HTML',
     isActive: false,
@@ -23,7 +23,6 @@ const snippetsList = ref([
 </html>`,
   },
   {
-    id: 2,
     title: 'CSS Reset',
     tag: 'CSS',
     isActive: false,
@@ -35,7 +34,6 @@ const snippetsList = ref([
 }`,
   },
   {
-    id: 3,
     title: 'CSS Reset',
     tag: 'CSS',
     isActive: false,
@@ -47,7 +45,6 @@ const snippetsList = ref([
 }`,
   },
   {
-    id: 4,
     title: 'HTML Boilerplate',
     tag: 'HTML',
     isActive: false,
@@ -66,14 +63,20 @@ const snippetsList = ref([
 </html>`,
   },
 ])
+
+const editedSnippedIndex = ref(null)
 </script>
 
 <template>
   <main>
     <h1>Code Snippet Manager</h1>
     <section class="displayedSnippets">
-      <SnippetCard v-for="snippet in snippetsList" :key="snippet.id" :snippet="snippet" />
-      <SnippetCard v-for="snippet in snippetsList" :key="snippet.id" :snippet="snippet" />
+      <component
+        :is="index == editedSnippedIndex ? FormCard : SnippetCard"
+        v-for="(snippet, index) in snippetsList"
+        :key="index"
+        :snippet="snippet"
+      />
     </section>
   </main>
 </template>

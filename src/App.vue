@@ -76,6 +76,9 @@ const editedSnippedIndex = ref(null)
         v-for="(snippet, index) in snippetsList"
         :key="index"
         :snippet="snippet"
+        :index="index"
+        @set-editing="(i) => (editedSnippedIndex = i)"
+        @set-show="snippet.isActive = !snippet.isActive"
       />
     </section>
   </main>

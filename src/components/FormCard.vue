@@ -1,17 +1,18 @@
 <script setup>
-import { ref } from 'vue'
-
 const props = defineProps(['snippet'])
-
-const active = ref(false)
 </script>
 
 <template>
-  <section :class="active && 'snippet-active'">
-    <h2>FormCard{{ props.snippet.title }}</h2>
-    <button @click="active = !active">{{ active ? 'Collapse' : 'Expand' }}</button>
-    <span>{{ props.snippet.tag }}</span>
+  <section :class="props.snippet.isActive ? 'snippet-active' : ''">
     <div>
+      <h2>Form{{ props.snippet.title }}</h2>
+      <button @click="$emit('set-show')">
+        {{ props.snippet.isActive ? 'Collapse' : 'Expand' }}
+      </button>
+      <button @click="$emit('set-editing', null)">Cancel</button>
+    </div>
+    <span>{{ props.snippet.tag }}</span>
+    <div class="snippet-content-container">
       <pre>{{ props.snippet.content }}</pre>
     </div>
   </section>
@@ -44,7 +45,7 @@ span {
   font-weight: bold;
 }
 
-div {
+.snippet-content-container {
   border-radius: 10px;
   padding: 4px;
   overflow: hidden;

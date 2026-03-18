@@ -1,4 +1,6 @@
 <script setup>
+import SnippetTag from './SnippetTag.vue'
+
 const props = defineProps(['snippet', 'index'])
 </script>
 
@@ -11,7 +13,7 @@ const props = defineProps(['snippet', 'index'])
       </button>
       <button @click="$emit('set-editing', props.index)">Edit</button>
     </div>
-    <span>{{ props.snippet.tag }}</span>
+    <SnippetTag :tag="props.snippet.tag" />
     <div class="snippet-content-container">
       <pre>{{ props.snippet.content }}</pre>
     </div>
@@ -35,14 +37,6 @@ section {
 .snippet-active {
   grid-column: 1/-1;
   height: unset;
-}
-
-span {
-  background-color: base.$secondary-color;
-  padding: 5px 8px;
-  border-radius: 5px;
-  color: white;
-  font-weight: bold;
 }
 
 .snippet-content-container {

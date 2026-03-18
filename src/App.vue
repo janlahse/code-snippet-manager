@@ -36,7 +36,7 @@ const snippetsList = ref([
   },
   {
     title: 'CSS Reset',
-    tag: { name: 'CSS', color: 'red' },
+    tag: { name: 'Java', color: 'green' },
     isActive: false,
     content: `*,
 *::before,

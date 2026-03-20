@@ -98,6 +98,7 @@ const tagList = computed(() => {
         :index="index"
         @set-editing="(i) => (editedSnippetIndex = i)"
         @set-show="snippet.isActive = !snippet.isActive"
+        @safe="(currentSnippet) => (snippetsList[index] = currentSnippet)"
       />
     </section>
   </main>

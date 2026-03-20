@@ -1,29 +1,46 @@
 <script setup>
-import SnippetTag from './SnippetTag.vue'
-
 const props = defineProps(['snippet'])
+const emit = defineEmits(['set-editing', 'safe', 'set-show'])
+
+function safeChanges(e) {
+  const updatedSnippet = {
+    title: e.target.snippetTitle.value,
+    tag: {
+      name: e.target.tagName.value,
+      color: e.target.tagColor.value,
+    },
+    isActive: props.snippet.isActive,
+    content: e.target.snippetContent.value,
+  }
+  emit('safe', updatedSnippet)
+  emit('set-editing', null)
+}
 </script>
 
 <template>
-  <section :class="props.snippet.isActive ? 'snippet-active' : ''">
+  <form :class="props.snippet.isActive ? 'snippet-active' : ''" @submit.prevent="safeChanges">
     <div>
-      <h2>Form{{ props.snippet.title }}</h2>
-      <button @click="$emit('set-show')">
+      <input :value="props.snippet.title" class="title-input" name="snippetTitle" />
+      <button @click.prevent="$emit('set-show')">
         {{ props.snippet.isActive ? 'Collapse' : 'Expand' }}
       </button>
-      <button @click="$emit('set-editing', null)">Cancel</button>
+      <button type="reset" @click="$emit('set-editing', null)">Cancel</button>
+      <button type="submit">Safe</button>
     </div>
-    <SnippetTag :tag="snippet.tag" />
-    <div class="snippet-content-container">
-      <pre>{{ props.snippet.content }}</pre>
-    </div>
-  </section>
+    <input :value="props.snippet.tag.name" name="tagName" />
+    <input :value="props.snippet.tag.color" name="tagColor" />
+    <textarea
+      :value="props.snippet.content"
+      name="snippetContent"
+      class="snippet-content-container"
+    ></textarea>
+  </form>
 </template>
 
 <style scoped lang="scss">
 @use '/src/base';
 
-section {
+form {
   height: 190px;
   display: flex;
   flex-direction: column;
@@ -37,6 +54,11 @@ section {
 .snippet-active {
   grid-column: 1/-1;
   height: unset;
+}
+
+.title-input {
+  font-size: 1.5em;
+  font-family: unset;
 }
 
 .snippet-content-container {

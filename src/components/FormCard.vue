@@ -1,6 +1,6 @@
 <script setup>
 const props = defineProps(['snippet'])
-const emit = defineEmits(['set-editing', 'safe', 'set-show'])
+const emit = defineEmits(['set-editing', 'safe', 'delete', 'cancel'])
 const colors = ['blue', 'red', 'green']
 
 function safeChanges(e) {
@@ -28,7 +28,12 @@ function safeChanges(e) {
         name="snippetTitle"
         placeholder="Enter a title for your snippet here"
       />
-      <button type="reset" @click="$emit('set-editing', null)">Cancel</button>
+      <button
+        type="reset"
+        @click="props.snippet.title ? $emit('set-editing', null) : $emit('cancel')"
+      >
+        Cancel
+      </button>
       <button type="submit">Safe</button>
     </div>
     <div class="tag-form">
@@ -40,6 +45,7 @@ function safeChanges(e) {
       />
       <div>
         <input
+          required
           v-for="(color, index) in colors"
           :key="index"
           type="radio"

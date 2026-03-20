@@ -1,7 +1,16 @@
 <script setup>
+import { ref } from 'vue'
 import SnippetTag from './SnippetTag.vue'
 
+const emit = defineEmits(['delete', 'set-show', 'set-editing'])
+
 const props = defineProps(['snippet', 'index'])
+const deleteCheck = ref(false)
+
+function onDelete() {
+  emit('delete', props.index)
+  deleteCheck.value = false
+}
 </script>
 
 <template>
@@ -12,6 +21,13 @@ const props = defineProps(['snippet', 'index'])
         {{ props.snippet.isActive ? 'Collapse' : 'Expand' }}
       </button>
       <button @click="$emit('set-editing', props.index)">Edit</button>
+      <div v-if="deleteCheck">
+        <p>
+          Delete this snippet? <button @click="onDelete">Yes</button>
+          <button @click="deleteCheck = false">No</button>
+        </p>
+      </div>
+      <button v-else @click="deleteCheck = true">Delete</button>
     </div>
     <SnippetTag :tag="props.snippet.tag" />
     <div class="snippet-content-container">

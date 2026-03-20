@@ -80,16 +80,45 @@ const tagList = computed(() => {
   })
   return uniqueTags
 })
+
+const addingSnippet = ref(false)
+
+const emptySnippet = {
+  title: '',
+  tag: { name: '', color: '' },
+  isActive: false,
+  content: '',
+}
+
+function addSnippet(newSnippet) {
+  snippetsList.value.unshift(newSnippet)
+  editedSnippetIndex.value = null
+  addingSnippet.value = false
+}
+
+function deleteSnippet(index) {
+  snippetsList.value = snippetsList.value.filter(
+    (snippet) => index !== snippetsList.value.indexOf(snippet),
+  )
+  editedSnippetIndex.value = null
+}
 </script>
 
 <template>
   <main>
     <h1>Code Snippet Manager</h1>
+    <button @click="addingSnippet = true" type="button">New Snippet</button>
     <p>
-      Filter by Tag:
+      Tags:
       <SnippetTag v-for="(tag, index) in tagList" :tag="tag" :key="index" />
     </p>
     <section class="displayedSnippets">
+      <FormCard
+        v-if="addingSnippet"
+        :snippet="emptySnippet"
+        @cancel="addingSnippet = false"
+        @safe="addSnippet"
+      />
       <component
         :is="index == editedSnippetIndex ? FormCard : SnippetCard"
         v-for="(snippet, index) in snippetsList"
@@ -97,6 +126,7 @@ const tagList = computed(() => {
         :snippet="snippet"
         :index="index"
         @set-editing="(i) => (editedSnippetIndex = i)"
+        @delete="deleteSnippet"
         @set-show="snippet.isActive = !snippet.isActive"
         @safe="(currentSnippet) => (snippetsList[index] = currentSnippet)"
       />
@@ -126,6 +156,14 @@ main {
   > * {
     margin-bottom: 30px;
   }
+}
+
+button {
+  border: none;
+  background-color: white;
+  border-radius: 3px;
+  padding: 3px 5px;
+  margin-right: 5px;
 }
 
 .displayedSnippets {

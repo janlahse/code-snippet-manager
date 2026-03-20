@@ -1,16 +1,20 @@
 <script setup>
-import { ref } from 'vue'
+import SnippetTag from './SnippetTag.vue'
 
-const props = defineProps(['snippet'])
-
-const active = ref(false)
+const props = defineProps(['snippet', 'index'])
 </script>
 
 <template>
-  <section :class="active && 'snippet-active'" @click="active = !active">
-    <h2>{{ props.snippet.title }}</h2>
-    <span>{{ props.snippet.tag }}</span>
+  <section :class="props.snippet.isActive ? 'snippet-active' : ''">
     <div>
+      <h2>{{ props.snippet.title }}</h2>
+      <button @click="$emit('set-show')">
+        {{ props.snippet.isActive ? 'Collapse' : 'Expand' }}
+      </button>
+      <button @click="$emit('set-editing', props.index)">Edit</button>
+    </div>
+    <SnippetTag :tag="props.snippet.tag" />
+    <div class="snippet-content-container">
       <pre>{{ props.snippet.content }}</pre>
     </div>
   </section>
@@ -35,15 +39,7 @@ section {
   height: unset;
 }
 
-span {
-  background-color: base.$secondary-color;
-  padding: 5px 8px;
-  border-radius: 5px;
-  color: white;
-  font-weight: bold;
-}
-
-div {
+.snippet-content-container {
   border-radius: 10px;
   padding: 4px;
   overflow: hidden;

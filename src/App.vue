@@ -1,12 +1,13 @@
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import SnippetCard from './components/SnippetCard.vue'
+import FormCard from './components/FormCard.vue'
+import SnippetTag from './components/SnippetTag.vue'
 
 const snippetsList = ref([
   {
-    id: 1,
     title: 'HTML Boilerplate',
-    tag: 'HTML',
+    tag: { name: 'HTML', color: 'blue' },
     isActive: false,
     content: `<!DOCTYPE html>
 <html lang="en">
@@ -23,9 +24,8 @@ const snippetsList = ref([
 </html>`,
   },
   {
-    id: 2,
     title: 'CSS Reset',
-    tag: 'CSS',
+    tag: { name: 'CSS', color: 'red' },
     isActive: false,
     content: `*,
 *::before,
@@ -35,9 +35,8 @@ const snippetsList = ref([
 }`,
   },
   {
-    id: 3,
     title: 'CSS Reset',
-    tag: 'CSS',
+    tag: { name: 'Java', color: 'green' },
     isActive: false,
     content: `*,
 *::before,
@@ -47,9 +46,8 @@ const snippetsList = ref([
 }`,
   },
   {
-    id: 4,
     title: 'HTML Boilerplate',
-    tag: 'HTML',
+    tag: { name: 'HTML', color: 'blue' },
     isActive: false,
     content: `<!DOCTYPE html>
 <html lang="en">
@@ -66,14 +64,42 @@ const snippetsList = ref([
 </html>`,
   },
 ])
+
+const editedSnippetIndex = ref(null)
+
+const tagList = computed(() => {
+  const allTags = snippetsList.value.map((snippet) => snippet.tag)
+  const uniqueTags = []
+  if (allTags.length > 0) uniqueTags.push(allTags[0])
+  allTags.forEach((tag) => {
+    let isInList = false
+    uniqueTags.forEach((uniqueTag) => {
+      if (uniqueTag.color === tag.color && uniqueTag.name === tag.name) isInList = true
+    })
+    if (!isInList) uniqueTags.push(tag)
+  })
+  return uniqueTags
+})
 </script>
 
 <template>
   <main>
     <h1>Code Snippet Manager</h1>
+    <p>
+      Filter by Tag:
+      <SnippetTag v-for="(tag, index) in tagList" :tag="tag" :key="index" />
+    </p>
     <section class="displayedSnippets">
-      <SnippetCard v-for="snippet in snippetsList" :key="snippet.id" :snippet="snippet" />
-      <SnippetCard v-for="snippet in snippetsList" :key="snippet.id" :snippet="snippet" />
+      <component
+        :is="index == editedSnippetIndex ? FormCard : SnippetCard"
+        v-for="(snippet, index) in snippetsList"
+        :key="index"
+        :snippet="snippet"
+        :index="index"
+        @set-editing="(i) => (editedSnippetIndex = i)"
+        @set-show="snippet.isActive = !snippet.isActive"
+        @safe="(currentSnippet) => (snippetsList[index] = currentSnippet)"
+      />
     </section>
   </main>
 </template>

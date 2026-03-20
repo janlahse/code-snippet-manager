@@ -1,5 +1,17 @@
-$default-font: 'Gill Sans', 'Gill Sans MT', 'Trebuchet MS', sans-serif;
+$default-font: 'Trebuchet MS', sans-serif;
 $primary-color: #333;
 $primary-color-soft: #666;
-$secondary-color: #559;
 $white: #eee;
+
+.blue {
+  background-color: #559;
+  border: 3px solid #559;
+}
+.red {
+  background-color: #c33;
+  border: 3px solid #c33;
+}
+.green {
+  background-color: #595;
+  border: 3px solid #595;
+}

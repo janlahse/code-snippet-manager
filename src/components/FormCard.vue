@@ -1,6 +1,7 @@
 <script setup>
 const props = defineProps(['snippet'])
 const emit = defineEmits(['set-editing', 'safe', 'set-show'])
+const colors = ['blue', 'red', 'green']
 
 function safeChanges(e) {
   const updatedSnippet = {
@@ -18,21 +19,43 @@ function safeChanges(e) {
 </script>
 
 <template>
-  <form :class="props.snippet.isActive ? 'snippet-active' : ''" @submit.prevent="safeChanges">
+  <form class="snippet-active" @submit.prevent="safeChanges">
     <div>
-      <input :value="props.snippet.title" class="title-input" name="snippetTitle" />
-      <button @click.prevent="$emit('set-show')">
-        {{ props.snippet.isActive ? 'Collapse' : 'Expand' }}
-      </button>
+      <input
+        required
+        :value="props.snippet.title"
+        class="title-input"
+        name="snippetTitle"
+        placeholder="Enter a title for your snippet here"
+      />
       <button type="reset" @click="$emit('set-editing', null)">Cancel</button>
       <button type="submit">Safe</button>
     </div>
-    <input :value="props.snippet.tag.name" name="tagName" />
-    <input :value="props.snippet.tag.color" name="tagColor" />
+    <div class="tag-form">
+      <input
+        required
+        :value="props.snippet.tag.name"
+        name="tagName"
+        placeholder="Add a colored tag"
+      />
+      <div>
+        <input
+          v-for="(color, index) in colors"
+          :key="index"
+          type="radio"
+          name="tagColor"
+          :value="color"
+          :checked="color === props.snippet.tag.color"
+          :class="'color-input ' + color"
+        />
+      </div>
+    </div>
     <textarea
+      required
+      rows="10"
       :value="props.snippet.content"
       name="snippetContent"
-      class="snippet-content-container"
+      placeholder="Your code snippet goes here"
     ></textarea>
   </form>
 </template>
@@ -59,19 +82,37 @@ form {
 .title-input {
   font-size: 1.5em;
   font-family: unset;
+  width: 100%;
 }
 
-.snippet-content-container {
+.tag-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  div {
+    display: flex;
+    gap: 10px;
+  }
+}
+
+.color-input {
+  appearance: none;
+  height: 1.3em;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  &:checked {
+    background-color: base.$white;
+  }
+}
+
+textarea {
   border-radius: 10px;
   padding: 4px;
-  overflow: hidden;
   width: 100%;
+  max-height: 100%;
   color: base.$primary-color-soft;
-  background-color: white;
-}
-
-pre {
   font-family: Courier, monospace;
   font-size: 0.9em;
+  resize: none;
 }
 </style>

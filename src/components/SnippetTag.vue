@@ -8,7 +8,7 @@ const props = defineProps(['tag'])
 
 <style scoped lang="scss">
 span {
-  padding: 5px 8px;
+  padding: 2px 5px;
   border-radius: 5px;
   color: white;
   font-weight: bold;

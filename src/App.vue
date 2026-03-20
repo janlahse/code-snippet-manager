@@ -102,6 +102,11 @@ function deleteSnippet(index) {
   )
   editedSnippetIndex.value = null
 }
+
+function moveSnippet(index, direction) {
+  console.log(index)
+  console.log(direction)
+}
 </script>
 
 <template>
@@ -129,6 +134,7 @@ function deleteSnippet(index) {
         @delete="deleteSnippet"
         @set-show="snippet.isActive = !snippet.isActive"
         @safe="(currentSnippet) => (snippetsList[index] = currentSnippet)"
+        @move-snippet="moveSnippet"
       />
     </section>
   </main>

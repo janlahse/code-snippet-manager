@@ -103,9 +103,20 @@ function deleteSnippet(index) {
   editedSnippetIndex.value = null
 }
 
-function moveSnippet(index, direction) {
-  console.log(index)
-  console.log(direction)
+function moveSnippet(direction, index) {
+  const temp = snippetsList.value[index]
+  if (direction === 'up' && index > 0) {
+    snippetsList.value[index] = snippetsList.value[index - 1]
+    snippetsList.value[index - 1] = temp
+    console.log(index)
+    console.log(index - 1)
+  }
+  if (direction === 'down' && index < snippetsList.value.length - 1) {
+    snippetsList.value[index] = snippetsList.value[index + 1]
+    snippetsList.value[index + 1] = temp
+    console.log(index)
+    console.log(index + 1)
+  }
 }
 </script>
 

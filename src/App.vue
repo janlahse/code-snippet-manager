@@ -35,35 +35,51 @@ const snippetsList = ref([
 }`,
   },
   {
-    title: 'CSS Reset',
-    tag: { name: 'Java', color: 'green' },
+    title: 'Fetch API',
+    tag: { name: 'JavaScript', color: 'green' },
     isActive: false,
-    content: `*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
+    content: `async function getData() {
+  const url = "https://example.org/products.json";
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(\`Response status: \${response.status}\`);
+    }
+
+    const result = await response.json();
+    console.log(result);
+  } catch (error) {
+    console.error(error.message);
+  }
 }`,
   },
   {
-    title: 'HTML Boilerplate',
+    title: 'isAndroid',
+    tag: { name: 'JavaScript', color: 'green' },
+    isActive: false,
+    content: `function isAndroid() {
+    return navigator.userAgent.toLowerCase().indexOf('android') >= 0;
+}`,
+  },
+  {
+    title: 'Dropdown Menu',
     tag: { name: 'HTML', color: 'blue' },
     isActive: false,
-    content: `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Hello, world!</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="description" content="" />
-  <link rel="icon" href="favicon.png">
-</head>
-<body>
-  <h1>Hello, world!</h1>
-</body>
-</html>`,
+    content: `<select name="myDropdown" id="dropdown">
+  <option>1</option>
+  <option selected>2</option>
+  <option>3</option>
+  <option>4</option>
+</select>`,
   },
 ])
+
+const emptySnippet = {
+  title: '',
+  tag: { name: '', color: '' },
+  isActive: false,
+  content: '',
+}
 
 const editedSnippetIndex = ref(null)
 
@@ -82,13 +98,6 @@ const tagList = computed(() => {
 })
 
 const addingSnippet = ref(false)
-
-const emptySnippet = {
-  title: '',
-  tag: { name: '', color: '' },
-  isActive: false,
-  content: '',
-}
 
 function addSnippet(newSnippet) {
   snippetsList.value.unshift(newSnippet)
@@ -124,6 +133,23 @@ function moveSnippet(direction, index) {
     snippetsList.value[index + 1] = temp
   }
 }
+
+const tagFilter = ref({ name: '', color: '' })
+
+const filteredSnippets = computed(() => {
+  if (tagFilter.value.name === '') return snippetsList.value
+  else
+    return snippetsList.value.filter(
+      (snippet) =>
+        snippet.tag.name === tagFilter.value.name && snippet.tag.color === tagFilter.value.color,
+    )
+})
+
+function setFilter(tag) {
+  if (tag.color === tagFilter.value.color && tag.name === tagFilter.value.name)
+    tagFilter.value = { name: '', color: '' }
+  else tagFilter.value = tag
+}
 </script>
 
 <template>
@@ -132,7 +158,14 @@ function moveSnippet(direction, index) {
     <button @click="addingSnippet = true" type="button">New Snippet</button>
     <p>
       Tags:
-      <SnippetTag v-for="(tag, index) in tagList" :tag="tag" :key="index" />
+      <SnippetTag
+        v-for="(tag, index) in tagList"
+        :tag="tag"
+        :key="index"
+        :currentFilter="tagFilter"
+        :filter="true"
+        @set-filter="setFilter(tag)"
+      />
     </p>
     <section class="displayedSnippets">
       <FormCard
@@ -142,8 +175,8 @@ function moveSnippet(direction, index) {
         @safe="addSnippet"
       />
       <component
-        :is="index == editedSnippetIndex ? FormCard : SnippetCard"
-        v-for="(snippet, index) in snippetsList"
+        :is="index === editedSnippetIndex ? FormCard : SnippetCard"
+        v-for="(snippet, index) in filteredSnippets"
         :key="index"
         :snippet="snippet"
         :index="index"

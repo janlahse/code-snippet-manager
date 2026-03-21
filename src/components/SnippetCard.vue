@@ -4,13 +4,16 @@ import SnippetTag from './SnippetTag.vue'
 import SnippetMenu from './SnippetMenu.vue'
 
 const emit = defineEmits(['delete', 'set-show', 'set-editing', 'move-snippet'])
-
 const props = defineProps(['snippet', 'index'])
 const deleteCheck = ref(false)
 
 function onDelete() {
   emit('delete', props.index)
   deleteCheck.value = false
+}
+
+function copyToClipboard() {
+  navigator.clipboard.writeText(props.snippet.content)
 }
 </script>
 
@@ -30,6 +33,7 @@ function onDelete() {
         </p>
       </div>
       <button v-else @click="deleteCheck = true">Delete</button>
+      <button @click="copyToClipboard">Copy</button>
     </div>
     <SnippetTag :tag="props.snippet.tag" />
     <div class="snippet-content-container">

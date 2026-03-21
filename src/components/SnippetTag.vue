@@ -4,10 +4,12 @@ const props = defineProps(['tag', 'filter', 'currentFilter'])
 
 <template>
   <span
-    @click="props.filter && $emit('set-filter', props.tag.color)"
+    @click="props.filter && $emit('set-filter')"
     :class="
-      (props.filter && props.tag.color !== props.currentFilter ? 'is-filter ' : ' is-not-filter ') +
-      props.tag.color
+      ((props.filter && props.tag.color !== props.currentFilter.color) ||
+      (props.filter && props.tag.name !== props.currentFilter.name)
+        ? 'is-filter '
+        : ' is-not-filter ') + props.tag.color
     "
     >{{ props.tag.name }}</span
   >
@@ -18,6 +20,7 @@ span {
   padding: 2px 5px;
   border-radius: 5px;
   font-weight: bold;
+  cursor: default;
 }
 
 .is-filter {

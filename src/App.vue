@@ -35,33 +35,42 @@ const snippetsList = ref([
 }`,
   },
   {
-    title: 'CSS Reset',
-    tag: { name: 'Java', color: 'green' },
+    title: 'Fetch API',
+    tag: { name: 'JavaScript', color: 'green' },
     isActive: false,
-    content: `*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
+    content: `async function getData() {
+  const url = "https://example.org/products.json";
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(\`Response status: \${response.status}\`);
+    }
+
+    const result = await response.json();
+    console.log(result);
+  } catch (error) {
+    console.error(error.message);
+  }
 }`,
   },
   {
-    title: 'HTML Boilerplate',
+    title: 'isAndroid',
+    tag: { name: 'JavaScript', color: 'green' },
+    isActive: false,
+    content: `function isAndroid() {
+    return navigator.userAgent.toLowerCase().indexOf('android') >= 0;
+}`,
+  },
+  {
+    title: 'Dropdown Menu',
     tag: { name: 'HTML', color: 'blue' },
     isActive: false,
-    content: `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Hello, world!</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="description" content="" />
-  <link rel="icon" href="favicon.png">
-</head>
-<body>
-  <h1>Hello, world!</h1>
-</body>
-</html>`,
+    content: `<select name="myDropdown" id="dropdown">
+  <option>1</option>
+  <option selected>2</option>
+  <option>3</option>
+  <option>4</option>
+</select>`,
   },
 ])
 
@@ -125,11 +134,21 @@ function moveSnippet(direction, index) {
   }
 }
 
-const tagFilter = ref(null)
+const tagFilter = ref({ name: '', color: '' })
 
-function setFilter(color) {
-  if (color === tagFilter.value) tagFilter.value = null
-  else tagFilter.value = color
+const filteredSnippets = computed(() => {
+  if (tagFilter.value.name === '') return snippetsList.value
+  else
+    return snippetsList.value.filter(
+      (snippet) =>
+        snippet.tag.name === tagFilter.value.name && snippet.tag.color === tagFilter.value.color,
+    )
+})
+
+function setFilter(tag) {
+  if (tag.color === tagFilter.value.color && tag.name === tagFilter.value.name)
+    tagFilter.value = { name: '', color: '' }
+  else tagFilter.value = tag
 }
 </script>
 
@@ -145,7 +164,7 @@ function setFilter(color) {
         :key="index"
         :currentFilter="tagFilter"
         :filter="true"
-        @set-filter="setFilter"
+        @set-filter="setFilter(tag)"
       />
     </p>
     <section class="displayedSnippets">
@@ -156,8 +175,8 @@ function setFilter(color) {
         @safe="addSnippet"
       />
       <component
-        :is="index == editedSnippetIndex ? FormCard : SnippetCard"
-        v-for="(snippet, index) in snippetsList"
+        :is="index === editedSnippetIndex ? FormCard : SnippetCard"
+        v-for="(snippet, index) in filteredSnippets"
         :key="index"
         :snippet="snippet"
         :index="index"

@@ -65,6 +65,13 @@ const snippetsList = ref([
   },
 ])
 
+const emptySnippet = {
+  title: '',
+  tag: { name: '', color: '' },
+  isActive: false,
+  content: '',
+}
+
 const editedSnippetIndex = ref(null)
 
 const tagList = computed(() => {
@@ -82,13 +89,6 @@ const tagList = computed(() => {
 })
 
 const addingSnippet = ref(false)
-
-const emptySnippet = {
-  title: '',
-  tag: { name: '', color: '' },
-  isActive: false,
-  content: '',
-}
 
 function addSnippet(newSnippet) {
   snippetsList.value.unshift(newSnippet)
@@ -124,6 +124,13 @@ function moveSnippet(direction, index) {
     snippetsList.value[index + 1] = temp
   }
 }
+
+const tagFilter = ref(null)
+
+function setFilter(color) {
+  if (color === tagFilter.value) tagFilter.value = null
+  else tagFilter.value = color
+}
 </script>
 
 <template>
@@ -132,7 +139,14 @@ function moveSnippet(direction, index) {
     <button @click="addingSnippet = true" type="button">New Snippet</button>
     <p>
       Tags:
-      <SnippetTag v-for="(tag, index) in tagList" :tag="tag" :key="index" />
+      <SnippetTag
+        v-for="(tag, index) in tagList"
+        :tag="tag"
+        :key="index"
+        :currentFilter="tagFilter"
+        :filter="true"
+        @set-filter="setFilter"
+      />
     </p>
     <section class="displayedSnippets">
       <FormCard

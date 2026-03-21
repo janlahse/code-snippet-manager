@@ -102,6 +102,28 @@ function deleteSnippet(index) {
   )
   editedSnippetIndex.value = null
 }
+
+function moveSnippet(direction, index) {
+  const temp = snippetsList.value[index]
+  if (
+    direction === 'up' &&
+    index > 0 &&
+    index !== editedSnippetIndex.value &&
+    index - 1 !== editedSnippetIndex.value
+  ) {
+    snippetsList.value[index] = snippetsList.value[index - 1]
+    snippetsList.value[index - 1] = temp
+  }
+  if (
+    direction === 'down' &&
+    index < snippetsList.value.length - 1 &&
+    index !== editedSnippetIndex.value &&
+    index + 1 !== editedSnippetIndex.value
+  ) {
+    snippetsList.value[index] = snippetsList.value[index + 1]
+    snippetsList.value[index + 1] = temp
+  }
+}
 </script>
 
 <template>
@@ -129,6 +151,7 @@ function deleteSnippet(index) {
         @delete="deleteSnippet"
         @set-show="snippet.isActive = !snippet.isActive"
         @safe="(currentSnippet) => (snippetsList[index] = currentSnippet)"
+        @move-snippet="moveSnippet"
       />
     </section>
   </main>

@@ -1,8 +1,9 @@
 <script setup>
 import { ref } from 'vue'
 import SnippetTag from './SnippetTag.vue'
+import SnippetMenu from './SnippetMenu.vue'
 
-const emit = defineEmits(['delete', 'set-show', 'set-editing'])
+const emit = defineEmits(['delete', 'set-show', 'set-editing', 'move-snippet'])
 
 const props = defineProps(['snippet', 'index'])
 const deleteCheck = ref(false)
@@ -17,6 +18,7 @@ function onDelete() {
   <section :class="props.snippet.isActive ? 'snippet-active' : ''">
     <div>
       <h2>{{ props.snippet.title }}</h2>
+      <SnippetMenu @move-snippet="(direction) => $emit('move-snippet', direction, props.index)" />
       <button @click="$emit('set-show')">
         {{ props.snippet.isActive ? 'Collapse' : 'Expand' }}
       </button>

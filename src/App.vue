@@ -135,11 +135,17 @@ function moveSnippet(direction, index) {
 }
 
 const tagFilter = ref({ name: '', color: '' })
+const searchString = ref('')
 
 const filteredSnippets = computed(() => {
-  if (tagFilter.value.name === '') return snippetsList.value
+  const regex = new RegExp(RegExp.escape(searchString.value, 'i'))
+  const searchedList = snippetsList.value.filter(
+    (snippet) => snippet.title.match(regex) || snippet.content.match(regex),
+  )
+
+  if (tagFilter.value.name === '') return searchedList
   else
-    return snippetsList.value.filter(
+    return searchedList.filter(
       (snippet) =>
         snippet.tag.name === tagFilter.value.name && snippet.tag.color === tagFilter.value.color,
     )
@@ -156,6 +162,10 @@ function setFilter(tag) {
   <main>
     <h1>Code Snippet Manager</h1>
     <button @click="addingSnippet = true" type="button">New Snippet</button>
+    <p>
+      <label for="search-input">Search: </label
+      ><input @keyup.enter.esc="(e) => e.target.blur()" v-model="searchString" id="search-input" />
+    </p>
     <p>
       Tags:
       <SnippetTag

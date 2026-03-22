@@ -48,6 +48,7 @@ const props = defineProps(['isExpanded'])
   fill: base.$primary-color;
   cursor: pointer;
 }
+
 .toggle-hide-icon {
   width: 20px;
   height: 20px;

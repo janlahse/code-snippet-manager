@@ -138,7 +138,7 @@ const tagFilter = ref({ name: '', color: '' })
 const searchString = ref('')
 
 const filteredSnippets = computed(() => {
-  const regex = new RegExp(RegExp.escape(searchString.value, 'i'))
+  const regex = new RegExp(RegExp.escape(searchString.value), 'i')
   const searchedList = snippetsList.value.filter(
     (snippet) => snippet.title.match(regex) || snippet.content.match(regex),
   )

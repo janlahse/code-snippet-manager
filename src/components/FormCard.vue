@@ -31,7 +31,7 @@ function safeChanges(e) {
       />
       <button
         type="reset"
-        @click="props.snippet.title ? $emit('set-editing', null) : $emit('cancel')"
+        @click="props.snippet.title ? emit('set-editing', null) : emit('cancel')"
       >
         Cancel
       </button>

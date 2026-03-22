@@ -3,85 +3,14 @@ import { computed, ref } from 'vue'
 import SnippetCard from './components/SnippetCard.vue'
 import FormCard from './components/FormCard.vue'
 import SnippetTag from './components/SnippetTag.vue'
+import { emptysnippet, snippets } from './data'
 
-const snippetsList = ref([
-  {
-    title: 'HTML Boilerplate',
-    tag: { name: 'HTML', color: 'blue' },
-    isActive: false,
-    content: `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Hello, world!</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="description" content="" />
-  <link rel="icon" href="favicon.png">
-</head>
-<body>
-  <h1>Hello, world!</h1>
-</body>
-</html>`,
-  },
-  {
-    title: 'CSS Reset',
-    tag: { name: 'CSS', color: 'red' },
-    isActive: false,
-    content: `*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-}`,
-  },
-  {
-    title: 'Fetch API',
-    tag: { name: 'JavaScript', color: 'green' },
-    isActive: false,
-    content: `async function getData() {
-  const url = "https://example.org/products.json";
-  try {
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error(\`Response status: \${response.status}\`);
-    }
-
-    const result = await response.json();
-    console.log(result);
-  } catch (error) {
-    console.error(error.message);
-  }
-}`,
-  },
-  {
-    title: 'isAndroid',
-    tag: { name: 'JavaScript', color: 'green' },
-    isActive: false,
-    content: `function isAndroid() {
-    return navigator.userAgent.toLowerCase().indexOf('android') >= 0;
-}`,
-  },
-  {
-    title: 'Dropdown Menu',
-    tag: { name: 'HTML', color: 'blue' },
-    isActive: false,
-    content: `<select name="myDropdown" id="dropdown">
-  <option>1</option>
-  <option selected>2</option>
-  <option>3</option>
-  <option>4</option>
-</select>`,
-  },
-])
-
-const emptySnippet = {
-  title: '',
-  tag: { name: '', color: '' },
-  isActive: false,
-  content: '',
-}
-
+const snippetsList = ref(snippets)
+const emptySnippet = emptysnippet
 const editedSnippetIndex = ref(null)
+const addingSnippet = ref(false)
+const tagFilter = ref({ name: '', color: '' })
+const searchString = ref('')
 
 const tagList = computed(() => {
   const allTags = snippetsList.value.map((snippet) => snippet.tag)
@@ -97,7 +26,19 @@ const tagList = computed(() => {
   return uniqueTags
 })
 
-const addingSnippet = ref(false)
+const filteredSnippets = computed(() => {
+  const regex = new RegExp(RegExp.escape(searchString.value), 'i')
+  const searchedList = snippetsList.value.filter(
+    (snippet) => snippet.title.match(regex) || snippet.content.match(regex),
+  )
+
+  if (tagFilter.value.name === '') return searchedList
+  else
+    return searchedList.filter(
+      (snippet) =>
+        snippet.tag.name === tagFilter.value.name && snippet.tag.color === tagFilter.value.color,
+    )
+})
 
 function addSnippet(newSnippet) {
   snippetsList.value.unshift(newSnippet)
@@ -133,23 +74,6 @@ function moveSnippet(direction, index) {
     snippetsList.value[index + 1] = temp
   }
 }
-
-const tagFilter = ref({ name: '', color: '' })
-const searchString = ref('')
-
-const filteredSnippets = computed(() => {
-  const regex = new RegExp(RegExp.escape(searchString.value), 'i')
-  const searchedList = snippetsList.value.filter(
-    (snippet) => snippet.title.match(regex) || snippet.content.match(regex),
-  )
-
-  if (tagFilter.value.name === '') return searchedList
-  else
-    return searchedList.filter(
-      (snippet) =>
-        snippet.tag.name === tagFilter.value.name && snippet.tag.color === tagFilter.value.color,
-    )
-})
 
 function setFilter(tag) {
   if (tag.color === tagFilter.value.color && tag.name === tagFilter.value.name)
@@ -218,7 +142,6 @@ main {
   padding: 30px 10% 0;
   font-family: base.$default-font;
   color: base.$primary-color;
-
   > * {
     margin-bottom: 30px;
   }
@@ -232,7 +155,7 @@ button {
   font-family: inherit;
   font-weight: bold;
   cursor: pointer;
-  transition: 0.1s;
+  transition: 0.1s ease;
   &:hover {
     background-color: #ddd;
   }

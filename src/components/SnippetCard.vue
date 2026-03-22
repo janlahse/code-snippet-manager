@@ -6,13 +6,12 @@ import SnippetMenu from './SnippetMenu.vue'
 const emit = defineEmits(['delete', 'set-show', 'set-editing', 'move-snippet'])
 const props = defineProps(['snippet', 'index'])
 const deleteCheck = ref(false)
+const copyConfirmation = ref(false)
 
 function onDelete() {
   emit('delete', props.index)
   deleteCheck.value = false
 }
-
-const copyConfirmation = ref(false)
 
 function copyToClipboard() {
   navigator.clipboard.writeText(props.snippet.content)
@@ -26,15 +25,15 @@ function copyToClipboard() {
     <div class="row-1">
       <h2>{{ props.snippet.title }}</h2>
       <SnippetMenu
-        @set-show="$emit('set-show')"
+        @set-show="emit('set-show')"
         :isExpanded="snippet.isActive"
-        @move-snippet="(direction) => $emit('move-snippet', direction, props.index)"
+        @move-snippet="(direction) => emit('move-snippet', direction, props.index)"
       />
     </div>
     <div class="row-2">
       <SnippetTag :tag="props.snippet.tag" />
       <div class="row-2">
-        <button v-if="!deleteCheck" @click="$emit('set-editing', props.index)">Edit</button>
+        <button v-if="!deleteCheck" @click="emit('set-editing', props.index)">Edit</button>
         <div v-if="deleteCheck" class="row-2">
           <span> Delete this snippet?</span>
           <div class="row-2">

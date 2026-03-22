@@ -17,10 +17,11 @@ const props = defineProps(['tag', 'filter', 'currentFilter'])
 
 <style scoped lang="scss">
 span {
-  padding: 2px 5px;
+  padding: 2px 4px;
   border-radius: 5px;
   font-weight: bold;
   cursor: default;
+  margin-right: 5px;
 }
 
 .is-filter {

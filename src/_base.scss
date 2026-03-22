@@ -8,10 +8,18 @@ $white: #eee;
   border: 3px solid #559;
 }
 .red {
-  background-color: #c33;
-  border: 3px solid #c33;
+  background-color: #b35;
+  border: 3px solid #b35;
 }
 .green {
   background-color: #595;
   border: 3px solid #595;
+}
+.orange {
+  background-color: #e70;
+  border: 3px solid #e70;
+}
+.black {
+  background-color: $primary-color;
+  border: 3px solid $primary-color;
 }

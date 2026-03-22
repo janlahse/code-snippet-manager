@@ -1,7 +1,7 @@
 <script setup>
 const props = defineProps(['snippet'])
 const emit = defineEmits(['set-editing', 'safe', 'delete', 'cancel'])
-const colors = ['blue', 'red', 'green']
+const colors = ['blue', 'red', 'green', 'orange', 'black']
 
 function safeChanges(e) {
   const updatedSnippet = {

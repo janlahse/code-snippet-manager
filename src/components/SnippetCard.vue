@@ -12,30 +12,42 @@ function onDelete() {
   deleteCheck.value = false
 }
 
+const copyConfirmation = ref(false)
+
 function copyToClipboard() {
   navigator.clipboard.writeText(props.snippet.content)
+  copyConfirmation.value = true
+  setTimeout(() => (copyConfirmation.value = false), 2000)
 }
 </script>
 
 <template>
   <section :class="props.snippet.isActive ? 'snippet-active' : ''">
-    <div>
+    <div class="row-1">
       <h2>{{ props.snippet.title }}</h2>
-      <SnippetMenu @move-snippet="(direction) => $emit('move-snippet', direction, props.index)" />
-      <button @click="$emit('set-show')">
-        {{ props.snippet.isActive ? 'Collapse' : 'Expand' }}
-      </button>
-      <button @click="$emit('set-editing', props.index)">Edit</button>
-      <div v-if="deleteCheck">
-        <p>
-          Delete this snippet? <button @click="onDelete">Yes</button>
-          <button @click="deleteCheck = false">No</button>
-        </p>
-      </div>
-      <button v-else @click="deleteCheck = true">Delete</button>
-      <button @click="copyToClipboard">Copy</button>
+      <SnippetMenu
+        @set-show="$emit('set-show')"
+        :isExpanded="snippet.isActive"
+        @move-snippet="(direction) => $emit('move-snippet', direction, props.index)"
+      />
     </div>
-    <SnippetTag :tag="props.snippet.tag" />
+    <div class="row-2">
+      <SnippetTag :tag="props.snippet.tag" />
+      <div class="row-2">
+        <button v-if="!deleteCheck" @click="$emit('set-editing', props.index)">Edit</button>
+        <div v-if="deleteCheck" class="row-2">
+          <span> Delete this snippet?</span>
+          <div class="row-2">
+            <button @click="onDelete">Yes</button>
+            <button @click="deleteCheck = false">No</button>
+          </div>
+        </div>
+        <button v-else @click="deleteCheck = true">Delete</button>
+        <button v-if="!deleteCheck" @click="copyToClipboard">
+          {{ copyConfirmation ? 'Copied!' : 'Copy' }}
+        </button>
+      </div>
+    </div>
     <div class="snippet-content-container">
       <pre>{{ props.snippet.content }}</pre>
     </div>
@@ -54,6 +66,7 @@ section {
   border: 2px solid base.$primary-color;
   border-radius: 10px;
   padding: 20px 30px;
+  overflow: hidden;
 }
 
 .snippet-active {

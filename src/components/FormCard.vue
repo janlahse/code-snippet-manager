@@ -20,13 +20,14 @@ function safeChanges(e) {
 
 <template>
   <form class="snippet-active" @submit.prevent="safeChanges">
-    <div>
+    <div class="row-2">
       <input
         required
         :value="props.snippet.title"
         class="title-input"
         name="snippetTitle"
         placeholder="Enter a title for your snippet here"
+        maxlength="20"
       />
       <button
         type="reset"
@@ -42,6 +43,7 @@ function safeChanges(e) {
         :value="props.snippet.tag.name"
         name="tagName"
         placeholder="Add a colored tag"
+        maxlength="15"
       />
       <div>
         <input
@@ -112,8 +114,6 @@ form {
 }
 
 textarea {
-  border-radius: 10px;
-  padding: 4px;
   width: 100%;
   max-height: 100%;
   color: base.$primary-color-soft;

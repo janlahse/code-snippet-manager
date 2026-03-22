@@ -39,13 +39,14 @@ const props = defineProps(['isExpanded'])
 .snippet-menu {
   display: flex;
   align-items: center;
+  gap: 5px;
 }
 
 .icon {
   width: 15px;
   height: 15px;
   fill: base.$primary-color;
-  margin-right: 5px;
+  cursor: pointer;
 }
 .toggle-hide-icon {
   width: 20px;

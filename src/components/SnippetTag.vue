@@ -21,11 +21,15 @@ span {
   border-radius: 5px;
   font-weight: bold;
   cursor: default;
-  margin-right: 5px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .is-filter {
   background-color: white;
+  cursor: pointer;
 }
 
 .is-not-filter {

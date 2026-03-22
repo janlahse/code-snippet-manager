@@ -12,8 +12,12 @@ function onDelete() {
   deleteCheck.value = false
 }
 
+const copyConfirmation = ref(false)
+
 function copyToClipboard() {
   navigator.clipboard.writeText(props.snippet.content)
+  copyConfirmation.value = true
+  setTimeout(() => (copyConfirmation.value = false), 2000)
 }
 </script>
 
@@ -27,17 +31,22 @@ function copyToClipboard() {
         @move-snippet="(direction) => $emit('move-snippet', direction, props.index)"
       />
     </div>
-    <div>
+    <div class="row-2">
       <SnippetTag :tag="props.snippet.tag" />
-      <button @click="$emit('set-editing', props.index)">Edit</button>
-      <div v-if="deleteCheck">
-        <p>
-          Delete this snippet? <button @click="onDelete">Yes</button>
-          <button @click="deleteCheck = false">No</button>
-        </p>
+      <div class="row-2">
+        <button v-if="!deleteCheck" @click="$emit('set-editing', props.index)">Edit</button>
+        <div v-if="deleteCheck" class="row-2">
+          <span> Delete this snippet?</span>
+          <div class="row-2">
+            <button @click="onDelete">Yes</button>
+            <button @click="deleteCheck = false">No</button>
+          </div>
+        </div>
+        <button v-else @click="deleteCheck = true">Delete</button>
+        <button v-if="!deleteCheck" @click="copyToClipboard">
+          {{ copyConfirmation ? 'Copied!' : 'Copy' }}
+        </button>
       </div>
-      <button v-else @click="deleteCheck = true">Delete</button>
-      <button @click="copyToClipboard">Copy</button>
     </div>
     <div class="snippet-content-container">
       <pre>{{ props.snippet.content }}</pre>
@@ -57,20 +66,12 @@ section {
   border: 2px solid base.$primary-color;
   border-radius: 10px;
   padding: 20px 30px;
+  overflow: hidden;
 }
 
 .snippet-active {
   grid-column: 1/-1;
   height: unset;
-}
-
-.row-1 {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  h2 {
-    word-break: break-all;
-  }
 }
 
 .snippet-content-container {

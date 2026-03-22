@@ -166,8 +166,8 @@ function setFilter(tag) {
       <label for="search-input">Search: </label
       ><input @keyup.enter.esc="(e) => e.target.blur()" v-model="searchString" id="search-input" />
     </p>
-    <p>
-      Tags:
+    <div class="row-2">
+      <span>Tags:</span>
       <SnippetTag
         v-for="(tag, index) in tagList"
         :tag="tag"
@@ -176,7 +176,7 @@ function setFilter(tag) {
         :filter="true"
         @set-filter="setFilter(tag)"
       />
-    </p>
+    </div>
     <section class="displayedSnippets">
       <FormCard
         v-if="addingSnippet"
@@ -227,9 +227,15 @@ main {
 button {
   border: none;
   background-color: white;
-  border-radius: 3px;
-  padding: 3px 5px;
-  margin-right: 5px;
+  padding: 4px 6px;
+  border-radius: 5px;
+  font-family: inherit;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.1s;
+  &:hover {
+    background-color: #ddd;
+  }
 }
 
 .displayedSnippets {
@@ -242,5 +248,29 @@ button {
   @media (min-width: 900px) {
     grid-template-columns: calc((100% / 3) - 10px) calc((100% / 3) - 10px) calc((100% / 3) - 10px);
   }
+}
+
+input,
+textarea {
+  font-family: inherit;
+  border-radius: 3px;
+  border: 1px solid black;
+  padding: 2px 4px;
+}
+
+.row-1 {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  h2 {
+    word-break: break-all;
+  }
+}
+
+.row-2 {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
 }
 </style>

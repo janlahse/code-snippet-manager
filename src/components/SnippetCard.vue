@@ -19,12 +19,16 @@ function copyToClipboard() {
 
 <template>
   <section :class="props.snippet.isActive ? 'snippet-active' : ''">
-    <div>
+    <div class="row-1">
       <h2>{{ props.snippet.title }}</h2>
-      <SnippetMenu @move-snippet="(direction) => $emit('move-snippet', direction, props.index)" />
-      <button @click="$emit('set-show')">
-        {{ props.snippet.isActive ? 'Collapse' : 'Expand' }}
-      </button>
+      <SnippetMenu
+        @set-show="$emit('set-show')"
+        :isExpanded="snippet.isActive"
+        @move-snippet="(direction) => $emit('move-snippet', direction, props.index)"
+      />
+    </div>
+    <div>
+      <SnippetTag :tag="props.snippet.tag" />
       <button @click="$emit('set-editing', props.index)">Edit</button>
       <div v-if="deleteCheck">
         <p>
@@ -35,7 +39,6 @@ function copyToClipboard() {
       <button v-else @click="deleteCheck = true">Delete</button>
       <button @click="copyToClipboard">Copy</button>
     </div>
-    <SnippetTag :tag="props.snippet.tag" />
     <div class="snippet-content-container">
       <pre>{{ props.snippet.content }}</pre>
     </div>
@@ -59,6 +62,15 @@ section {
 .snippet-active {
   grid-column: 1/-1;
   height: unset;
+}
+
+.row-1 {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  h2 {
+    word-break: break-all;
+  }
 }
 
 .snippet-content-container {

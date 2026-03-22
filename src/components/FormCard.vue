@@ -27,6 +27,7 @@ function safeChanges(e) {
         class="title-input"
         name="snippetTitle"
         placeholder="Enter a title for your snippet here"
+        maxlength="20"
       />
       <button
         type="reset"
@@ -42,6 +43,7 @@ function safeChanges(e) {
         :value="props.snippet.tag.name"
         name="tagName"
         placeholder="Add a colored tag"
+        maxlength="15"
       />
       <div>
         <input

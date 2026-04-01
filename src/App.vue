@@ -1,11 +1,12 @@
 <script setup>
 import { computed, ref } from 'vue'
+import { useStorage } from '@vueuse/core'
 import SnippetCard from './components/SnippetCard.vue'
 import FormCard from './components/FormCard.vue'
 import SnippetTag from './components/SnippetTag.vue'
 import { emptysnippet, snippets } from './data'
 
-const snippetsList = ref(snippets)
+const snippetsList = useStorage('snippets', snippets)
 const emptySnippet = emptysnippet
 const editedSnippetIndex = ref(null)
 const addingSnippet = ref(false)
@@ -86,12 +87,12 @@ function setFilter(tag) {
   <main>
     <h1>Code Snippet Manager</h1>
     <button @click="addingSnippet = true" type="button">New Snippet</button>
-    <p>
+    <p v-if="snippetsList.length > 0">
       <label for="search-input">Search: </label
       ><input @keyup.enter.esc="(e) => e.target.blur()" v-model="searchString" id="search-input" />
     </p>
-    <div class="row-2">
-      <span>Tags:</span>
+    <div v-if="snippetsList.length > 0" class="row-2">
+      <span>Filter by Tag:</span>
       <SnippetTag
         v-for="(tag, index) in tagList"
         :tag="tag"

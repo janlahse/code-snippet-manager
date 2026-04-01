@@ -1,24 +1,29 @@
-<script setup></script>
-
 <template>
-  <div>
+  <div class="footer">
     <hr />
     <div class="footer-content">
-      <a href="">Legal Disclosure</a>
-      <a href="">Privacy Policy</a>
+      <span class="link" @click="$emit('changePage', 'legal')">Legal Disclosure</span>
+      <span class="link" @click="$emit('changePage', 'privacy')">Privacy Policy</span>
     </div>
   </div>
 </template>
 
-<style lang="scss">
+<style>
+.footer {
+  position: absolute;
+  width: 80%;
+  bottom: 0;
+}
+
 .footer-content {
-  margin-top: 20px;
+  margin: 15px 0 20px;
   display: flex;
   justify-content: center;
   gap: 25px;
 }
 
-a {
-  color: inherit;
+.link {
+  text-decoration: underline;
+  cursor: pointer;
 }
 </style>

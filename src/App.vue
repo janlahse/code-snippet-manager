@@ -6,6 +6,8 @@ import FormCard from './components/FormCard.vue'
 import SnippetTag from './components/SnippetTag.vue'
 import { emptysnippet, snippets } from './data'
 import AppFooter from './components/AppFooter.vue'
+import LegalDisclosure from './components/LegalDisclosure.vue'
+import PrivacyPolicy from './components/PrivacyPolicy.vue'
 
 const snippetsList = useStorage('snippets', snippets)
 const emptySnippet = emptysnippet
@@ -13,6 +15,7 @@ const editedSnippetIndex = ref(null)
 const addingSnippet = ref(false)
 const tagFilter = ref({ name: '', color: '' })
 const searchString = ref('')
+const currentPage = ref('main')
 
 const tagList = computed(() => {
   const allTags = snippetsList.value.map((snippet) => snippet.tag)
@@ -82,49 +85,62 @@ function setFilter(tag) {
     tagFilter.value = { name: '', color: '' }
   else tagFilter.value = tag
 }
+
+function changePage(page) {
+  currentPage.value = page
+  window.scrollTo({ top: 0 })
+}
 </script>
 
 <template>
-  <main>
-    <h1>Code Snippet Manager</h1>
-    <button @click="addingSnippet = true" type="button">New Snippet</button>
-    <p v-if="snippetsList.length > 0">
-      <label for="search-input">Search: </label
-      ><input @keyup.enter.esc="(e) => e.target.blur()" v-model="searchString" id="search-input" />
-    </p>
-    <div v-if="snippetsList.length > 0" class="row-2">
-      <span>Filter by Tag:</span>
-      <SnippetTag
-        v-for="(tag, index) in tagList"
-        :tag="tag"
-        :key="index"
-        :currentFilter="tagFilter"
-        :filter="true"
-        @set-filter="setFilter(tag)"
-      />
-    </div>
-    <section class="displayedSnippets">
-      <FormCard
-        v-if="addingSnippet"
-        :snippet="emptySnippet"
-        @cancel="addingSnippet = false"
-        @safe="addSnippet"
-      />
-      <component
-        :is="index === editedSnippetIndex ? FormCard : SnippetCard"
-        v-for="(snippet, index) in filteredSnippets"
-        :key="index"
-        :snippet="snippet"
-        :index="index"
-        @set-editing="(i) => (editedSnippetIndex = i)"
-        @delete="deleteSnippet"
-        @set-show="snippet.isActive = !snippet.isActive"
-        @safe="(currentSnippet) => (snippetsList[index] = currentSnippet)"
-        @move-snippet="moveSnippet"
-      />
-    </section>
-    <AppFooter />
-  </main>
+  <div class="app">
+    <h1 @click="changePage('main')">Code Snippet Manager</h1>
+    <main v-if="currentPage === 'main'">
+      <button @click="addingSnippet = true" type="button">New Snippet</button>
+      <p v-if="snippetsList.length > 0">
+        <label for="search-input">Search: </label
+        ><input
+          @keyup.enter.esc="(e) => e.target.blur()"
+          v-model="searchString"
+          id="search-input"
+        />
+      </p>
+      <div v-if="snippetsList.length > 0" class="row-2">
+        <span>Filter by Tag:</span>
+        <SnippetTag
+          v-for="(tag, index) in tagList"
+          :tag="tag"
+          :key="index"
+          :currentFilter="tagFilter"
+          :filter="true"
+          @set-filter="setFilter(tag)"
+        />
+      </div>
+      <section class="displayedSnippets">
+        <FormCard
+          v-if="addingSnippet"
+          :snippet="emptySnippet"
+          @cancel="addingSnippet = false"
+          @safe="addSnippet"
+        />
+        <component
+          :is="index === editedSnippetIndex ? FormCard : SnippetCard"
+          v-for="(snippet, index) in filteredSnippets"
+          :key="index"
+          :snippet="snippet"
+          :index="index"
+          @set-editing="(i) => (editedSnippetIndex = i)"
+          @delete="deleteSnippet"
+          @set-show="snippet.isActive = !snippet.isActive"
+          @safe="(currentSnippet) => (snippetsList[index] = currentSnippet)"
+          @move-snippet="moveSnippet"
+        />
+      </section>
+    </main>
+    <LegalDisclosure v-if="currentPage === 'legal'" />
+    <PrivacyPolicy v-if="currentPage === 'privacy'" />
+    <AppFooter @changePage="(page) => changePage(page)" />
+  </div>
 </template>
 
 <style lang="scss">
@@ -141,13 +157,25 @@ body {
   background-color: base.$white;
 }
 
-main {
-  padding: 30px 10% 0;
+.app {
+  padding: 30px 10% 30px;
   font-family: base.$default-font;
   color: base.$primary-color;
-  > * {
-    margin-bottom: 25px;
-  }
+  position: relative;
+  min-height: 100vh;
+}
+
+h1 {
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+main {
+  margin-bottom: 50px;
+}
+
+main > * {
+  margin-bottom: 25px;
 }
 
 button {

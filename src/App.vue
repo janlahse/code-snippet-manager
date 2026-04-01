@@ -5,6 +5,7 @@ import SnippetCard from './components/SnippetCard.vue'
 import FormCard from './components/FormCard.vue'
 import SnippetTag from './components/SnippetTag.vue'
 import { emptysnippet, snippets } from './data'
+import AppFooter from './components/AppFooter.vue'
 
 const snippetsList = useStorage('snippets', snippets)
 const emptySnippet = emptysnippet
@@ -122,6 +123,7 @@ function setFilter(tag) {
         @move-snippet="moveSnippet"
       />
     </section>
+    <AppFooter />
   </main>
 </template>
 
@@ -144,7 +146,7 @@ main {
   font-family: base.$default-font;
   color: base.$primary-color;
   > * {
-    margin-bottom: 30px;
+    margin-bottom: 25px;
   }
 }
 
